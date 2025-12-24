@@ -1,0 +1,516 @@
+/* Шрифт Fixedsys */
+@import url('https://fonts-online.ru/fonts/fixedsys');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    image-rendering: pixelated;
+    font-smooth: never;
+    -webkit-font-smoothing: none;
+}
+
+body {
+    font-family: 'Fixedsys', monospace;
+    background-color: #000033;
+    color: #00CC00;
+    line-height: 1.4;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image: 
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 68, 204, 0.1) 2px,
+            rgba(0, 68, 204, 0.1) 4px
+        ),
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 2px,
+            rgba(0, 68, 204, 0.1) 2px,
+            rgba(0, 68, 204, 0.1) 4px
+        );
+    background-size: 20px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Контейнер лаунчера */
+.launcher-window {
+    width: 100%;
+    max-width: 900px;
+    background-color: #000066;
+    border: 8px solid;
+    border-top-color: #0066CC;
+    border-left-color: #0066CC;
+    border-right-color: #003399;
+    border-bottom-color: #003399;
+    box-shadow: 
+        8px 8px 0 #000022,
+        inset 0 0 0 2px #000022;
+    position: relative;
+}
+
+/* Заголовок окна */
+.window-title {
+    background: linear-gradient(90deg, #0000AA, #000088);
+    padding: 8px 15px;
+    color: #FFFFFF;
+    font-size: 14px;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #000022;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.window-controls {
+    display: flex;
+    gap: 5px;
+}
+
+.window-button {
+    width: 12px;
+    height: 12px;
+    border: 1px solid;
+    border-top-color: #FFFFFF;
+    border-left-color: #FFFFFF;
+    border-right-color: #666666;
+    border-bottom-color: #666666;
+    background-color: #AAAAAA;
+    cursor: pointer;
+    transition: background-color 0.1s;
+}
+
+.window-button:hover {
+    background-color: #CCCCCC;
+}
+
+/* Содержимое лаунчера */
+.launcher-content {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    min-height: 500px;
+}
+
+@media (max-width: 768px) {
+    .launcher-content {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Левая панель - основная информация */
+.main-panel {
+    background-color: #000044;
+    border: 4px solid;
+    border-top-color: #0055AA;
+    border-left-color: #0055AA;
+    border-right-color: #003377;
+    border-bottom-color: #003377;
+    padding: 15px;
+    box-shadow: inset 3px 3px 0 #000022;
+}
+
+/* Логотип игры */
+.game-logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #000022;
+    border: 2px solid #004488;
+    min-height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-logo {
+    max-width: 100%;
+    max-height: 120px;
+    filter: 
+        drop-shadow(0 0 3px #00CC00)
+        drop-shadow(0 0 6px #006600);
+    image-rendering: pixelated;
+}
+
+/* Таймер */
+.countdown-section {
+    background-color: #000022;
+    border: 2px solid #004488;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.countdown-title {
+    color: #00FFFF;
+    font-size: 14px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.countdown-timer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.timer-unit {
+    background-color: #000000;
+    border: 2px solid #00AA00;
+    padding: 8px 12px;
+    min-width: 70px;
+    text-align: center;
+}
+
+.timer-value {
+    color: #FFFF00;
+    font-size: 24px;
+    margin-bottom: 5px;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.timer-label {
+    color: #00CC00;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+/* Прогресс бар */
+.progress-container {
+    margin-top: 20px;
+}
+
+.progress-label {
+    color: #00AAFF;
+    font-size: 12px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.progress-bar {
+    height: 16px;
+    background-color: #000022;
+    border: 2px solid #004488;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: repeating-linear-gradient(
+        45deg,
+        #00CC00,
+        #00CC00 5px,
+        #00AA00 5px,
+        #00AA00 10px
+    );
+    transition: width 0.5s;
+    position: relative;
+}
+
+.progress-fill::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    animation: progressShine 2s infinite;
+}
+
+@keyframes progressShine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* Правая панель - информация */
+.info-panel {
+    background-color: #000044;
+    border: 4px solid;
+    border-top-color: #0055AA;
+    border-left-color: #0055AA;
+    border-right-color: #003377;
+    border-bottom-color: #003377;
+    padding: 15px;
+    box-shadow: inset 3px 3px 0 #000022;
+}
+
+.panel-title {
+    color: #FF6600;
+    font-size: 14px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 1px dotted #004488;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Системные требования */
+.specs-list {
+    margin-bottom: 25px;
+}
+
+.spec-item {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px dotted #003366;
+}
+
+.spec-label {
+    color: #00CC00;
+    font-size: 11px;
+    margin-bottom: 3px;
+}
+
+.spec-value {
+    color: #FFFFFF;
+    font-size: 11px;
+}
+
+/* Статус лаунчера */
+.status-box {
+    background-color: #000022;
+    border: 2px solid #004488;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+.status-line {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 11px;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #FF0000;
+    margin-right: 8px;
+    animation: statusPulse 1s infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% { background-color: #FF0000; }
+    50% { background-color: #FF6666; }
+}
+
+.status-text {
+    color: #FFFFFF;
+}
+
+/* Кнопка запуска */
+.launch-button-container {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.launch-button {
+    display: none;
+    background-color: #AA0000;
+    color: #FFFFFF;
+    border: 4px solid;
+    border-top-color: #FF3333;
+    border-left-color: #FF3333;
+    border-right-color: #770000;
+    border-bottom-color: #770000;
+    padding: 12px 40px;
+    font-family: 'Fixedsys Excelsior', monospace;
+    font-size: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 
+        0 5px 0 #000022,
+        0 0 10px #FF0000;
+    position: relative;
+    transition: all 0.1s;
+    animation: launchReady 2s infinite alternate;
+}
+
+@keyframes launchReady {
+    0% { box-shadow: 0 5px 0 #000022, 0 0 10px #FF0000; }
+    100% { box-shadow: 0 5px 0 #000022, 0 0 20px #FF0000, 0 0 30px #FF6600; }
+}
+
+.launch-button:hover {
+    background-color: #CC0000;
+    transform: translateY(2px);
+    box-shadow: 
+        0 3px 0 #000022,
+        0 0 15px #FF0000;
+}
+
+.launch-button:active {
+    transform: translateY(5px);
+    box-shadow: 
+        0 0 0 #000022,
+        0 0 20px #FF0000;
+}
+
+/* Футер */
+.launcher-footer {
+    background-color: #000044;
+    border-top: 2px solid #003399;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #0066CC;
+}
+
+.company-info {
+    color: #00CC00;
+}
+
+/* Консольные сообщения */
+.console-output {
+    background-color: #000000;
+    border: 2px solid #004488;
+    padding: 10px;
+    margin-top: 20px;
+    height: 120px;
+    overflow-y: auto;
+    font-size: 11px;
+    color: #00CC00;
+    line-height: 1.3;
+}
+
+.console-line {
+    margin-bottom: 3px;
+    animation: typewriter 0.1s steps(40, end);
+}
+
+@keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+/* Полоса прокрутки */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000022;
+    border: 1px solid #004488;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #0055AA;
+    border: 1px solid #00AAFF;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0066CC;
+}
+
+/* Эффект мигающего курсора */
+.blinking-cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background-color: #00CC00;
+    margin-left: 5px;
+    animation: blinkCursor 1s infinite;
+}
+
+@keyframes blinkCursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Текстовый логотип (запасной вариант) */
+.text-logo {
+    color: #00CC00;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.text-logo-title {
+    color: #FFFF00;
+    font-size: 32px;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 0 #006600;
+}
+
+.text-logo-subtitle {
+    color: #00FFFF;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.text-logo-company {
+    color: #FF6600;
+    font-size: 18px;
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    
+    .launcher-window {
+        margin: 10px auto;
+    }
+    
+    .window-title {
+        font-size: 12px;
+        padding: 6px 10px;
+    }
+    
+    .launcher-content {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .countdown-timer {
+        gap: 5px;
+    }
+    
+    .timer-unit {
+        min-width: 60px;
+        padding: 6px 8px;
+    }
+    
+    .timer-value {
+        font-size: 20px;
+    }
+    
+    .launch-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .launcher-footer {
+        flex-direction: column;
+        gap: 5px;
+        text-align: center;
+    }
+}

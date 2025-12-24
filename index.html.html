@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Adventure Star Time - StarCompany Launcher</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Silkscreen|Press+Start+2P">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+        }
+        
+        body {
+            font-family: 'Silkscreen', monospace;
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a4a 100%);
+            color: #6cef6c;
+            line-height: 1.6;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Лаунчер контейнер */
+        .launcher-container {
+            max-width: 1200px;
+            margin: 30px auto;
+            background-color: rgba(10, 20, 40, 0.95);
+            border: 8px solid;
+            border-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    #4a9cff,
+                    #4a9cff 10px,
+                    #2a4a6a 10px,
+                    #2a4a6a 20px
+                ) 10;
+            box-shadow: 
+                0 0 30px rgba(74, 156, 255, 0.5),
+                inset 0 0 30px rgba(0, 20, 40, 0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Сетка пиксельного фона */
+        .launcher-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(74, 156, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(74, 156, 255, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* Шапка лаунчера */
+        .launcher-header {
+            background: linear-gradient(to right, #001122, #002244, #001122);
+            padding: 20px;
+            border-bottom: 4px solid #4a9cff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .launcher-header::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                #4a9cff 20%, 
+                #6cef6c 50%, 
+                #4a9cff 80%, 
+                transparent 100%);
+            animation: headerGlow 3s infinite alternate;
+        }
+        
+        @keyframes headerGlow {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        /* Логотип */
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .game-logo {
+            max-width: 400px;
+            height: auto;
+            filter: 
+                drop-shadow(0 0 5px rgba(108, 239, 108, 0.7))
+                drop-shadow(0 0 10px rgba(108, 239, 108, 0.5));
+            animation: logoFloat 4s ease-in-out infinite alternate;
+        }
+        
+        @keyframes logoFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+        
+        /* Индикатор запуска */
+        .launch-status {
+            text-align: right;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background-color: #ff3300;
+            border-radius: 50%;
+            margin-right: 10px;
+            animation: statusBlink 1.5s infinite;
+            box-shadow: 0 0 10px #ff3300;
+        }
+        
+        @keyframes statusBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .status-text {
+            font-size: 14px;
+            color: #4a9cff;
+        }
+        
+        /* Основное содержимое */
+        .launcher-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .launcher-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Левая колонка - таймер */
+        .timer-section {
+            background-color: rgba(0, 30, 60, 0.8);
+            border: 4px solid #2a4a6a;
+            padding: 25px;
+            box-shadow: 
+                inset 0 0 15px rgba(0, 0, 0, 0.7),
+                0 5px 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+        
+        .timer-section::before {
+            content: "";
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+            border: 2px solid rgba(74, 156, 255, 0.3);
+            pointer-events: none;
+        }
+        
+        .section-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 18px;
+            color: #ffcc00;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 #000;
+            padding-bottom: 10px;
+            border-bottom: 2px dotted #4a9cff;
+        }
+        
+        .timer {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .timer-block {
+            background: linear-gradient(to bottom, #001122, #002244);
+            border: 3px solid #2a4a6a;
+            padding: 15px 10px;
+            text-align: center;
+            box-shadow: inset 0 0 10px #000;
+        }
+        
+        .timer-value {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 28px;
+            color: #ffcc00;
+            text-shadow: 2px 2px 0 #000;
+            margin-bottom: 5px;
+            animation: timerPulse 1s infinite;
+        }
+        
+        @keyframes timerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .timer-label {
+            font-size: 12px;
+            color: #4a9cff;
+            text-transform: uppercase;
+        }
+        
+        .timer-message {
+            text-align: center;
+            font-size: 14px;
+            color: #6cef6c;
+            margin-top: 15px;
+        }
+        
+        /* Правая колонка - характеристики */
+        .specs-section {
+            background-color: rgba(30, 0, 60, 0.8);
+            border: 4px solid #6a2a8a;
+            padding: 25px;
+            box-shadow: 
+                inset 0 0 15px rgba(0, 0, 0, 0.7),
+                0 5px 15px rgba(0, 0, 0, 0.5);
+        }
+        
+        .specs-list {
+            margin-top: 20px;
+        }
+        
+        .spec-category {
+            margin-bottom: 25px;
+        }
+        
+        .spec-category-title {
+            font-family: 'Fixedsys', cursive;
+            font-size: 14px;
+            color: #ff4a9c;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            border-left: 4px solid #ff4a9c;
+        }
+        
+        .spec-item {
+            display: flex;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px dotted rgba(108, 239, 108, 0.2);
+        }
+        
+        .spec-label {
+            color: #6cef6c;
+            font-size: 12px;
+            min-width: 150px;
+        }
+        
+        .spec-value {
+            color: #fff;
+            font-size: 12px;
+            flex-grow: 1;
+        }
+        
+        /* Кнопка запуска */
+        .launch-button-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .launch-button {
+            display: none;
+            background: linear-gradient(to bottom, #ff3300, #cc2900);
+            color: #fff;
+            border: none;
+            padding: 25px 50px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 24px;
+            cursor: pointer;
+            text-transform: uppercase;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 0 0 4px #000,
+                0 0 0 8px #ffcc00,
+                0 15px 0 8px #992200;
+            transition: all 0.1s;
+            animation: launchButtonGlow 2s infinite alternate;
+            z-index: 1;
+        }
+        
+        @keyframes launchButtonGlow {
+            0% { 
+                box-shadow: 
+                    0 0 0 4px #000,
+                    0 0 0 8px #ffcc00,
+                    0 15px 0 8px #992200;
+            }
+            100% { 
+                box-shadow: 
+                    0 0 0 4px #000,
+                    0 0 0 8px #ffcc00,
+                    0 15px 0 8px #992200,
+                    0 0 30px 15px rgba(255, 51, 0, 0.7);
+            }
+        }
+        
+        .launch-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+            z-index: -1;
+        }
+        
+        .launch-button:hover {
+            transform: translateY(5px);
+            box-shadow: 
+                0 0 0 4px #000,
+                0 0 0 8px #ffcc00,
+                0 10px 0 8px #992200;
+        }
+        
+        .launch-button:hover::before {
+            left: 100%;
+        }
+        
+        .launch-button:active {
+            transform: translateY(10px);
+            box-shadow: 
+                0 0 0 4px #000,
+                0 0 0 8px #ffcc00,
+                0 5px 0 8px #992200;
+        }
+        
+        /* Футер лаунчера */
+        .launcher-footer {
+            background: linear-gradient(to right, #001122, #002244, #001122);
+            padding: 20px;
+            border-top: 4px solid #2a4a6a;
+            text-align: center;
+            font-size: 12px;
+            color: #4a9cff;
+        }
+        
+        .company-name {
+            color: #d9ff00;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            margin-top: 10px;
+            text-shadow: 2px 2px 0 #000;
+        }
+        
+        /* Анимация загрузки */
+        .loading-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #002244;
+            margin-top: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .loading-progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #4a9cff, #6cef6c);
+            transition: width 0.5s;
+            position: relative;
+        }
+        
+        .loading-progress::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            animation: loadingShine 2s infinite;
+        }
+        
+        @keyframes loadingShine {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* Стилизация скроллбара */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #001122;
+            border: 2px solid #2a4a6a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #4a9cff, #2a4a6a);
+            border: 2px solid #001122;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, #6cef6c, #4a9cff);
+        }
+    </style>
+</head>
+<body>
+    <div class="launcher-container">
+        <!-- Шапка лаунчера -->
+        <div class="launcher-header">
+            <div class="logo-container">
+                <img src="1.png" alt="The Adventure Star Time" class="game-logo" id="gameLogo">
+            </div>
+            <div class="launch-status">
+                <span class="status-indicator"></span>
+                <span class="status-text" id="statusText">LAUNCHER READY</span>
+            </div>
+        </div>
+        
+        <!-- Основное содержимое -->
+        <div class="launcher-content">
+            <!-- Левая колонка - таймер -->
+            <div class="timer-section">
+                <h2 class="section-title">BETA COUNTDOWN</h2>
+                <div class="timer" id="timer">
+                    <div class="timer-block">
+                        <div class="timer-value" id="days">00</div>
+                        <div class="timer-label">DAYS</div>
+                    </div>
+                    <div class="timer-block">
+                        <div class="timer-value" id="hours">00</div>
+                        <div class="timer-label">HOURS</div>
+                    </div>
+                    <div class="timer-block">
+                        <div class="timer-value" id="minutes">00</div>
+                        <div class="timer-label">MINUTES</div>
+                    </div>
+                    <div class="timer-block">
+                        <div class="timer-value" id="seconds">00</div>
+                        <div class="timer-label">SECONDS</div>
+                    </div>
+                </div>
+                <div class="loading-bar">
+                    <div class="loading-progress" id="loadingProgress"></div>
+                </div>
+                <p class="timer-message" id="timerMessage">Beta launching on February 29, 2026</p>
+            </div>
+            
+            <!-- Правая колонка - характеристики -->
+            <div class="specs-section">
+                <h2 class="section-title">SYSTEM REQUIREMENTS</h2>
+                <div class="specs-list">
+                    <div class="spec-category">
+                        <h3 class="spec-category-title">MINIMUM</h3>
+                        <div class="spec-item">
+                            <div class="spec-label">OS:</div>
+                            <div class="spec-value">Windows 10 64-bit</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">CPU:</div>
+                            <div class="spec-value">Intel Core i5-4460 / AMD FX-6300</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">RAM:</div>
+                            <div class="spec-value">8 GB</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">GPU:</div>
+                            <div class="spec-value">NVIDIA GTX 760 / AMD R7 260x</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">STORAGE:</div>
+                            <div class="spec-value">4 GB available</div>
+                        </div>
+                    </div>
+                    
+                    <div class="spec-category">
+                        <h3 class="spec-category-title">RECOMMENDED</h3>
+                        <div class="spec-item">
+                            <div class="spec-label">OS:</div>
+                            <div class="spec-value">Windows 11 64-bit</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">CPU:</div>
+                            <div class="spec-value">Intel Core i7-7700 / AMD Ryzen 5 1600</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">RAM:</div>
+                            <div class="spec-value">16 GB</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">GPU:</div>
+                            <div class="spec-value">NVIDIA GTX 1060 / AMD RX 580</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">STORAGE:</div>
+                            <div class="spec-value">4 GB SSD</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Кнопка запуска -->
+            <div class="launch-button-container">
+                <button class="launch-button" id="launchButton" onclick="window.open('https://gamejolt.com/games/stargaster1/1022697', '_blank')">
+                    LAUNCH BETA
+                </button>
+            </div>
+        </div>
+        
+        <!-- Футер -->
+        <div class="launcher-footer">
+            <p>© 2025 STARCOMPANY. THE ADVENTURE STAR TIME IS A TRADEMARK OF STARCOMPANY.</p>
+            <p class="company-name">StarCompany launcher v1.0</p>
+        </div>
+    </div>
+
+    <script>
+        // Элементы DOM
+        const daysElement = document.getElementById('days');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+        const timerMessage = document.getElementById('timerMessage');
+        const launchButton = document.getElementById('launchButton');
+        const statusText = document.getElementById('statusText');
+        const loadingProgress = document.getElementById('loadingProgress');
+        const gameLogo = document.getElementById('gameLogo');
+        
+        // Целевая дата - 29 февраля 2026
+        const targetDate = new Date('February 29, 2026 00:00:00').getTime();
+        
+        // Загрузка логотипа с обработкой ошибок
+        function loadLogo() {
+            gameLogo.onerror = function() {
+                // Если изображение не загрузилось, создаем текстовую версию
+                gameLogo.style.display = 'none';
+                const logoContainer = document.querySelector('.logo-container');
+                const textLogo = document.createElement('div');
+                textLogo.innerHTML = `
+                    <div style="font-family: 'Press Start 2P', cursive; color: #6cef6c; font-size: 24px; text-align: center;">
+                        <div style="font-size: 32px; color: #ffcc00; margin-bottom: 5px; text-shadow: 3px 3px 0 #000;">THE ADVENTURE</div>
+                        <div style="font-size: 28px; color: #4a9cff; margin-bottom: 5px;">STAR TIME</div>
+                        <div style="font-size: 16px; color: #ff4a9c;">STARCOMPANY</div>
+                    </div>
+                `;
+                logoContainer.appendChild(textLogo);
+            };
+        }
+        
+        // Обновление таймера
+        function updateTimer() {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+            
+            // Если время вышло
+            if (timeLeft <= 0) {
+                daysElement.textContent = '00';
+                hoursElement.textContent = '00';
+                minutesElement.textContent = '00';
+                secondsElement.textContent = '00';
+                timerMessage.textContent = 'BETA IS NOW AVAILABLE!';
+                statusText.textContent = 'READY TO LAUNCH';
+                launchButton.style.display = 'inline-block';
+                loadingProgress.style.width = '100%';
+                return;
+            }
+            
+            // Расчет времени
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            // Обновление отображения
+            daysElement.textContent = days.toString().padStart(2, '0');
+            hoursElement.textContent = hours.toString().padStart(2, '0');
+            minutesElement.textContent = minutes.toString().padStart(2, '0');
+            secondsElement.textContent = seconds.toString().padStart(2, '0');
+            
+            // Анимация секунд
+            secondsElement.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                secondsElement.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Обновление прогресс-бара (основано на общем времени до даты)
+            const totalTime = 1000 * 60 * 60 * 24 * 365 * 2; // Примерно 2 года до таргета
+            const timePassed = totalTime - timeLeft;
+            const progress = Math.min(99, (timePassed / totalTime) * 100);
+            loadingProgress.style.width = `${progress}%`;
+            
+            // Динамическое сообщение
+            if (days === 0 && hours < 24) {
+                timerMessage.textContent = 'LAUNCHING IN LESS THAN 24 HOURS!';
+                statusText.textContent = 'FINAL COUNTDOWN';
+            } else if (days < 7) {
+                timerMessage.textContent = 'LAUNCHING NEXT WEEK!';
+                statusText.textContent = 'PREPARING LAUNCH';
+            }
+        }
+        
+        // Симуляция "работы" лаунчера
+        function simulateLauncherActivity() {
+            const activities = [
+                'CHECKING UPDATES',
+                'VERIFYING FILES',
+                'LOADING ASSETS',
+                'CONNECTING TO SERVER',
+                'LAUNCHER READY'
+            ];
+            
+            let index = 0;
+            setInterval(() => {
+                statusText.textContent = activities[index];
+                index = (index + 1) % activities.length;
+            }, 3000);
+        }
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLogo();
+            updateTimer();
+            simulateLauncherActivity();
+            
+            // Обновление таймера каждую секунду
+            setInterval(updateTimer, 1000);
+            
+            // Проверяем, не истек ли уже таймер
+            const now = new Date().getTime();
+            if (now >= targetDate) {
+                launchButton.style.display = 'inline-block';
+                loadingProgress.style.width = '100%';
+                statusText.textContent = 'READY TO LAUNCH';
+            }
+            
+            // Добавляем эффект загрузки при открытии
+            setTimeout(() => {
+                loadingProgress.style.transition = 'width 2s';
+                loadingProgress.style.width = '45%';
+            }, 500);
+        });
+    </script>
+</body>
+</html>
